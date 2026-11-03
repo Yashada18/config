@@ -1,0 +1,442 @@
+
+/* #include <iostream>
+using namespace std;
+
+int steps = 0;
+int dp[100];
+
+int recursive(int n) {
+    steps++;
+
+    if (n <= 1)
+        return n;
+
+    return recursive(n - 1) + recursive(n - 2);
+}
+
+int memoization(int n) {
+    steps++;
+
+    if (n <= 1)
+        return n;
+
+    if (dp[n] != -1)
+        return dp[n];
+
+    dp[n] = memoization(n - 1) + memoization(n - 2);
+    return dp[n];
+}
+
+int main() {
+    int n, f[100], count = 0;
+
+    cout << "Enter number of terms: ";
+    cin >> n;
+
+    // Recursive Approach
+    cout << "\nRecursive Fibonacci Series: ";
+    steps = 0;
+
+    for (int i = 0; i < n; i++)
+        cout << recursive(i) << " ";
+
+    cout << "\nRecursive Step Count: " << steps;
+
+    // Iterative Approach
+    f[0] = 0;
+    f[1] = 1;
+
+    for (int i = 2; i < n; i++) {
+        f[i] = f[i - 1] + f[i - 2];
+        count++;
+    }
+
+    cout << "\n\nIterative Fibonacci Series: ";
+
+    for (int i = 0; i < n; i++)
+        cout << f[i] << " ";
+
+    cout << "\nIterative Step Count: " << count;
+
+    // Memoization Approach
+    for (int i = 0; i < 100; i++)
+        dp[i] = -1;
+
+    steps = 0;
+
+    cout << "\n\nMemoization Fibonacci Series: ";
+
+    for (int i = 0; i < n; i++)
+        cout << memoization(i) << " ";
+
+    cout << "\nMemoization Step Count: " << steps;
+
+    return 0;
+}
+*/
+
+/*
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+using namespace std;
+
+struct Node {
+    char data;
+    int freq;
+    Node *left, *right;
+
+    Node(char data, int freq) {
+        this->data = data;
+        this->freq = freq;
+        left = right = NULL;
+    }
+};
+
+struct Compare {
+    bool operator()(Node* l, Node* r) {
+        return l->freq > r->freq;
+    }
+};
+
+void printCodes(Node* root, string code) {
+    if (root == NULL)
+        return;
+
+    if (!root->left && !root->right) {
+        cout << root->data << " : " << code << endl;
+        return;
+    }
+
+    printCodes(root->left, code + "0");
+    printCodes(root->right, code + "1");
+}
+
+void HuffmanCodes(char data[], int freq[], int size) {
+    priority_queue<Node*, vector<Node*>, Compare> minHeap;
+
+    for (int i = 0; i < size; i++)
+        minHeap.push(new Node(data[i], freq[i]));
+
+    while (minHeap.size() > 1) {
+        Node* left = minHeap.top();
+        minHeap.pop();
+
+        Node* right = minHeap.top();
+        minHeap.pop();
+
+        Node* internal = new Node('$', left->freq + right->freq);
+
+        internal->left = left;
+        internal->right = right;
+
+        minHeap.push(internal);
+    }
+
+    Node* root = minHeap.top();
+
+    cout << "\nHuffman Codes:\n";
+    printCodes(root, "");
+}
+
+int main() {
+    int size;
+
+    cout << "Enter number of characters: ";
+    cin >> size;
+
+    char data[size];
+    int freq[size];
+
+    cout << "Enter characters and their frequencies:\n";
+
+    for (int i = 0; i < size; i++)
+        cin >> data[i] >> freq[i];
+
+    HuffmanCodes(data, freq, size);
+
+    return 0;
+}
+*/
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Item {
+    int weight, profit, index;
+    double ratio;
+};
+
+int main() {
+    int n, W;
+
+    cout << "Enter number of items: ";
+    cin >> n;
+
+    vector<Item> item(n);
+
+    cout << "Enter weight and profit of each item:\n";
+
+    for (int i = 0; i < n; i++) {
+        cin >> item[i].weight >> item[i].profit;
+
+        item[i].ratio =
+            (double)item[i].profit / item[i].weight;
+
+        item[i].index = i;
+    }
+
+    cout << "Enter knapsack capacity: ";
+    cin >> W;
+
+    // Bubble sort by profit/weight ratio
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (item[j].ratio < item[j + 1].ratio) {
+                Item temp = item[j];
+                item[j] = item[j + 1];
+                item[j + 1] = temp;
+            }
+        }
+    }
+
+    double maxProfit = 0;
+    int remaining = W;
+
+    cout << "\nSelected item sequence: ";
+
+    for (int i = 0; i < n; i++) {
+        if (remaining == 0)
+            break;
+
+        if (item[i].weight <= remaining) {
+            // Take the complete item
+            remaining -= item[i].weight;
+            maxProfit += item[i].profit;
+
+            cout << "Item " << item[i].index + 1
+                 << " (100%) ";
+        }
+        else {
+            // Take a fraction of the item
+            double fraction =
+                (double)remaining / item[i].weight;
+
+            maxProfit += item[i].ratio * remaining;
+
+            cout << "Item " << item[i].index + 1
+                 << " (" << fraction * 100 << "%) ";
+
+            remaining = 0;
+        }
+    }
+
+    cout << "\nMaximum Profit = " << maxProfit << endl;
+
+    return 0;
+}
+*/
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n, capacity;
+
+    cout << "Enter number of items: ";
+    cin >> n;
+
+    int profit[100], weight[100];
+
+    cout << "Enter profit and weight of each item:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> profit[i] >> weight[i];
+    }
+
+    cout << "Enter knapsack capacity: ";
+    cin >> capacity;
+
+    int dp[101][101] = {0};
+
+    for (int i = 1; i <= n; i++) {
+        for (int w = 1; w <= capacity; w++) {
+
+            if (weight[i-1] <= w) {
+                dp[i][w] = max(
+                    profit[i-1] + dp[i-1][w-weight[i-1]],
+                    dp[i-1][w]
+                );
+            }
+            else {
+                dp[i][w] = dp[i-1][w];
+            }
+        }
+    }
+
+    cout << "Maximum Profit = " << dp[n][capacity];
+
+    return 0;
+}
+/*
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int solutions = 0;
+
+bool safe(vector<int>& q, int row, int col) {
+    for (int i = 0; i < row; i++) {
+        if (q[i] == col || abs(q[i] - col) == row - i)
+            return false;
+    }
+    return true;
+}
+
+void solve(vector<int>& q, int row) {
+    if (row == 8) {
+        solutions++;
+
+        cout << "\nSolution " << solutions << ":\n";
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (q[i] == j)
+                    cout << "Q ";
+                else
+                    cout << ". ";
+            }
+            cout << endl;
+        }
+        return;
+    }
+
+    for (int col = 0; col < 8; col++) {
+        if (safe(q, row, col)) {
+            q[row] = col;
+            solve(q, row + 1);
+        }
+    }
+}
+
+int main() {
+    vector<int> q(8, -1);
+
+    // Place the first queen at row 1, column 1
+    q[0] = 0;
+
+    // Start placing the remaining queens from row 2
+    solve(q, 1);
+
+    cout << "\nTotal Solutions = " << solutions << endl;
+
+    return 0;
+}
+*/
+
+/*
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int d = 0, r = 0;
+
+void swap(int &a, int &b)
+{
+    int t = a;
+    a = b;
+    b = t;
+}
+
+// Deterministic Quick Sort
+void quick1(int a[], int l, int h)
+{
+    if (l >= h) return;
+
+    int p = a[h], i = l - 1;
+
+    for (int j = l; j < h; j++)
+    {
+        d++;
+
+        if (a[j] <= p)
+            swap(a[++i], a[j]);
+    }
+
+    swap(a[i + 1], a[h]);
+
+    int k = i + 1;
+
+    quick1(a, l, k - 1);
+    quick1(a, k + 1, h);
+}
+
+// Randomized Quick Sort
+void quick2(int a[], int l, int h)
+{
+    if (l >= h) return;
+
+    int x = l + rand() % (h - l + 1);
+    swap(a[x], a[h]);
+
+    int p = a[h], i = l - 1;
+
+    for (int j = l; j < h; j++)
+    {
+        r++;
+
+        if (a[j] <= p)
+            swap(a[++i], a[j]);
+    }
+
+    swap(a[i + 1], a[h]);
+
+    int k = i + 1;
+
+    quick2(a, l, k - 1);
+    quick2(a, k + 1, h);
+}
+
+int main()
+{
+    int n, a[100], b[100];
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+        b[i] = a[i];
+    }
+
+    srand(time(0));
+
+    quick1(a, 0, n - 1);
+    quick2(b, 0, n - 1);
+
+    cout << "\nDeterministic: ";
+
+    for (int i = 0; i < n; i++)
+        cout << a[i] << " ";
+
+    cout << "\nComparisons = " << d;
+
+    cout << "\n\nRandomized: ";
+
+    for (int i = 0; i < n; i++)
+        cout << b[i] << " ";
+
+    cout << "\nComparisons = " << r;
+
+    return 0;
+}
+*/
