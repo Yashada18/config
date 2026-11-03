@@ -31,10 +31,7 @@ contract Bank {
 }
 
 
-## 2. Bank Smart Contract — Simple Withdrawal Version
-
-```markdown
-# Bank Smart Contract
+# Students Smart Contract
 
 ## Solidity Code
 
@@ -42,28 +39,38 @@ contract Bank {
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract Bank {
-    uint public balance;
-
-    // Deposit Ether
-    function deposit() public payable {
-        balance += msg.value;
+contract Students {
+    struct Student {
+        uint id;
+        string name;
+        uint age;
+        string course;
     }
 
-    // Withdraw Ether in Ether units
-    function withdraw(uint amount) public {
-        uint amountWei = amount * 1 ether;
+    Student[] public students;
 
-        require(balance >= amountWei, "Insufficient balance");
-
-        balance -= amountWei;
-
-        (bool success, ) = payable(msg.sender).call{value: amountWei}("");
-        require(success, "Transfer failed");
+    // Add a student
+    function addStudent(
+        uint _id,
+        string memory _name,
+        uint _age,
+        string memory _course
+    ) public {
+        students.push(Student(_id, _name, _age, _course));
     }
 
-    // Check balance
-    function showBalance() public view returns (uint) {
-        return balance;
+    // Get student details
+    function getStudent(uint index)
+        public
+        view
+        returns (uint, string memory, uint, string memory)
+    {
+        Student memory s = students[index];
+        return (s.id, s.name, s.age, s.course);
+    }
+
+    // Get total number of students
+    function getStudentCount() public view returns (uint) {
+        return students.length;
     }
 }
